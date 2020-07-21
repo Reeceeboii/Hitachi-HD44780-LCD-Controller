@@ -13,3 +13,13 @@ The majority of the control signals that get sent to the screen are done so via 
 First of all, we need to wire it up - here's a schematic I threw together before starting:
 
 ![Circuit schematic](img/citcuit_schematic.png)
+(one thing to note is that having pins 0 and 1 in use by our program may cause issues when flashing the board. I had issues with avrdude during this step. Simply disconnecting the jumpers solves this and you can reconnect them straight after.)
+
+And a somewhat accurate recreation:
+
+![Wired up](img/wired_up.jpg)
+![Pins](img/pins.jpg)
+
+You can see 8 data bits are wired into PORTD (pins 0 through 7) and the control signals and clock latch pins wired into the lesser 3 bits of PORTB.
+
+GPIO pins aren't needed for power nor ground so those are wired into the regular 5V and GND pins on the far side of the board.
