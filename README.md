@@ -8,7 +8,7 @@ I haven't done any electronics based stuff in a while so figured I needed a fair
 ![TC1602B­01 back](img/lcd_back.jpg)
 
 ## The plan
-The majority of the control signals that get sent to the screen are done so via the 8 (D0-D7) data pins that are visible on the front of the module. Now sending data to these pins individually sounds (and is) a pain so luckily we can make use of the Arduino's port registers to allow quicker and more efficient access to these pins via the code. We can send out a byte of data at once as opposed to 8 individuals calls to a digital write function.
+The majority of the control signals that get sent to the screen are done so via the 8 (D0-D7) data pins that are visible on the front of the module. Now sending data to these pins individually sounds (and is) a pain, so luckily we can make use of the Arduino's port registers to allow quicker and more efficient access to these pins via the code. We can send out a byte of data at once as opposed to 8 individual calls to a digital write function doing a bit at a time. This makes for faster and more lightweight code.
 
 First of all, we need to wire it up - here's a schematic I threw together before starting:
 
