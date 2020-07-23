@@ -75,7 +75,7 @@ void setup(){
     // 0 through 7 (data bits) set to output
     DDRD  = 0xFF;
     // first 3 pins (of PORTB) used for control signals
-    DDRB  = 0x7;
+    DDRB  = 0x07;
        
     // now we can initialise the display
     initialise_eight_bit_one_line();
