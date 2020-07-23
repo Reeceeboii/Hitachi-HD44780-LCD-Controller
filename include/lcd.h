@@ -10,7 +10,13 @@
 #define RW 0x02
 #define E 0x04
 
+// and some other stuff
 char TEST_STRING_SINGLE_LINE[] = "Hello world!";
+// delay of 37μs to use for clock latch toggles
+// using 40 just for some leg room
+#define STANDARD_MICROSECOND_DELAY 40
+// the delay when clearing the display or returning home is a bit longer
+#define CLEAR_OR_RETURN_MICROSECOND_DELAY 1600
 
 void write_char(char c);
 void write_str(char* str);
@@ -18,3 +24,4 @@ void toggle_clock_latch(unsigned int microsecondDelay);
 void zero_control_signals();
 void clear_display();
 void return_home();
+void initialise_eight_bit_one_line();
