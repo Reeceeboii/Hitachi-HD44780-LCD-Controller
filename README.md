@@ -26,7 +26,7 @@ You can see 8 data bus bits are wired into PORTD (pins 0 through 7 on the Arduin
 
 GPIO pins aren't needed for power nor ground so those are wired into the regular 5V and GND pins on the far side of the board.
 
-## Steps to reach 'hello world'
+# Steps to reach 'hello world'
 The first thing I did was to take a look at the datasheet for the HD44780. This is a 60 page monstrosity, but we only need some of these pages (notably the instruction table and initialisation sections).
 
 Datasheet available at https://www.sparkfun.com/datasheets/LCD/HD44780.pdf
@@ -34,11 +34,14 @@ Datasheet available at https://www.sparkfun.com/datasheets/LCD/HD44780.pdf
 A snippet of the instruction table shown below can give you an idea of how each instruction is given: 
 ![Instruction table](img/instruction_table.png)
 
-Each instruction is comprised of 10 bits. There are 8 data bits (DB0 through 7) and then the register select and read/write bits. The register select bit determines whether data sent from the MPU lands in the driver's instruction register or data register. As the majority of the instructions aren't actually sending data, RS is left low for the majority of operations.
+## Instruction format
+Each instruction is comprised of 10 bits. There are 8 data bits (DB0 through 7) and then the register select and read/write bits. The register select bit determines whether data sent from the MPU lands in the driver's instruction register or data register. As the majority of the instructions aren't actually sending data, RS is left low for the majority of operations besides when we're actually sending character data.
 
-Each instruction's byte of data bus bits contains both the instruction and any parameters that instruction requires. Parameters are given after the first 1 occurs in this byte (which is also presumably how the HD44780 determines which instruction it's actually being given). A hurdle I stumbled across at the start was completely missing the fact that each instruction has some execution time alloted to it. The Arduino's clock cycle time is far faster than these execution times, so suffucient delays are required after each instruction is sent to the driver to avoid sending things too fast and causing timing errors.
+Each instruction's byte of data bus bits contains both the instruction and any parameters that the specific instruction requires. Parameters are given after the first 1 occurs in this byte (which is also presumably how the HD44780 determines which instruction it's actually being given). A hurdle I stumbled across at the start was completely missing the fact that each instruction has some execution time alloted to it. The Arduino's clock cycle time is far faster than these execution times, so suffucient delays are required after each instruction is sent to the driver to avoid sending things too fast and causing timing errors.
 
 After the control (RS & RW) and the 8 data bus bits are set, you trigger the instruction execution on the driver by pulsing the clock latch bit (E). Raise it high and then zero it instantly.
+
+## To start
 
 Prior to sending anything to the LCD driver, we need to set the Arduino's data direction registers to match our intended use of them (in terms of IO). As all we are doing is output on all of the pins we are using, we can set `DDRD` to `0xFF` and `DDRB` to `0x07`. This corresponds to the Uno's GPIO pins 0 to 7 and 8 to 10 respectively, as shown in the wiring schematic.
 
@@ -62,7 +65,7 @@ pinMode(7, INPUT);
 -Picture from https://www.peterbeard.co/postimages/digitalwrite/bits-to-pins.png
 
 ## An example instruction
-So let's send instruction 4 (display on/off control) as an example. RS and RW are zero, so we simply zero all control signals (including the clock latch for now): `PORTB = 0;`. The instruction itself is a byte, 3 of which are parameters. Say we wanted to turn on the display on, with a cursor and make that cursor blink. That's a `1` for all parameters. So the whole instruction is `00001111` (`0x0F`). To send this to the instruction register via the 8 data bus bits we can use the wiring to our advantage and do `PORTD = 0x0F;` So `PORTD` and `PORTB` are set, let's execute it. Pulse the clock latch bit while not changing the two other control bits, and immediately return it to zero:
+So let's send instruction 4 (display on/off control) as an example. RS and RW are zero, so we simply zero all control signals (including the clock latch for now): `PORTB = 0;`. The instruction itself is a byte, 3 bits of which are parameters. Say we wanted to turn on the display on, with a cursor and make that cursor blink. That's a `1` for all parameters. So the whole instruction is `00001111` (`0x0F`). To send this to the instruction register via the 8 data bus bits we can use the wiring to our advantage and do `PORTD = 0x0F;` So `PORTD` and `PORTB` are set, let's execute it. Pulse the clock latch bit while not changing the two other control bits, and immediately return it to zero:
 
 ```
 PORTB |= 0x04;
