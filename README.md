@@ -1,6 +1,8 @@
 # Hitachi-HD44780-LCD-Controller
 ## My attempt at writing code to control a TC1602B­01 (HD44780 compatible) LCD module without any LCD specific libraries.
 
+## *Note that this is NOT a library. It is very opinionated code based on a specific wiring setup. It was solely used as a learning exercise.*
+
 I haven't done any electronics based stuff in a while so figured I needed a fairly interesting project to get back into the flow of things. I have an LCD module (Tinsharp TC1602B­01) sitting in my box of electronics along with an Arduino so figured I'd wire them up and write the control code myself to hopefully renew my knowledge and learn a thing or two along the way.
 
 
