@@ -25,6 +25,8 @@
 char TEST_STRING_SINGLE_LINE[] = "Hello world!";
 char TEST_STRING_DUAL_LINE[] = "Hello line 2!";
 // delay of 37μs to use for clock latch toggles
+// I added an extra 3μs because I'm not quite sure how tolerant these waiting times
+// given in the documentation actually are
 #define STANDARD_MICROSECOND_DELAY 40
 // the delay when clearing the display or returning home is a bit longer
 #define CLEAR_OR_RETURN_MICROSECOND_DELAY 2000
@@ -135,5 +137,5 @@ void setup(){
 }
 
 void loop(){
-    
+
 }
