@@ -25,9 +25,9 @@
 char TEST_STRING_SINGLE_LINE[] = "Hello world!";
 char TEST_STRING_DUAL_LINE[] = "Hello line 2!";
 // delay of 37μs to use for clock latch toggles
-#define STANDARD_MICROSECOND_DELAY 37
+#define STANDARD_MICROSECOND_DELAY 40
 // the delay when clearing the display or returning home is a bit longer
-#define CLEAR_OR_RETURN_MICROSECOND_DELAY 1600
+#define CLEAR_OR_RETURN_MICROSECOND_DELAY 2000
 
 
 // Toggle the chipset's clock latch and wait a given number of microseconds.
@@ -37,6 +37,7 @@ char TEST_STRING_DUAL_LINE[] = "Hello line 2!";
 // as part of triggering a clock pulse
 void toggle_clock_latch(unsigned int microsecondDelay){
     PORTB |= E;
+    delayMicroseconds(1);
     PORTB &= ~E;
     delayMicroseconds(microsecondDelay);
 }
@@ -134,4 +135,5 @@ void setup(){
 }
 
 void loop(){
+    
 }
