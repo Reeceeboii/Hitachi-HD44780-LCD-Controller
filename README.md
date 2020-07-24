@@ -85,8 +85,11 @@ Voila!
 
 ![Hello world](img/working.jpg)
 
+And the dual line display mode working:
+
+![Hello world 2 line](img/2_line_working.jpg)
 
 # Some of the things I learnt:
 - port registers
-- low level bit shifting put into practice
+- low level bit shifting put into practice (and bitwise operations)
 - avoiding some simple (yet irritating) timing bugs
