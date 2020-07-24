@@ -5,7 +5,41 @@
 
 
 #include <Arduino.h>
-#include "lcd.h"
+
+
+// instruction codes
+#define EIGHT_BIT_ONE_LINE_DISPLAY 0x30
+#define EIGHT_BIT_TWO_LINE_DISPLAY 0x38
+#define DISPLAY_ON_CURSOR_APPEAR 0x0F
+#define ENTRY_MODE_SET 0x06
+#define CLEAR_DISPLAY 0x01
+#define RETURN_HOME 0x02
+#define MOVE_CURSOR_TO_SECOND_LINE 0x40
+
+// my particular pins for the 3 control signals
+#define RS 0x01
+#define RW 0x02
+#define E 0x04
+
+// and some other stuff
+char TEST_STRING_SINGLE_LINE[] = "Hello world!";
+char TEST_STRING_DUAL_LINE[] = "Hello line 2!";
+// delay of 37μs to use for clock latch toggles
+#define STANDARD_MICROSECOND_DELAY 37
+// the delay when clearing the display or returning home is a bit longer
+#define CLEAR_OR_RETURN_MICROSECOND_DELAY 1600
+
+
+// Toggle the chipset's clock latch and wait a given number of microseconds.
+// As we don't want to affect any other control bits before an instruction is sent, we can just simply
+// toggle the control latch bit on its own.
+// Also, as each instruction takes x amount of time to complete, we can bundle a microsecond delay param
+// as part of triggering a clock pulse
+void toggle_clock_latch(unsigned int microsecondDelay){
+    PORTB |= E;
+    PORTB &= ~E;
+    delayMicroseconds(microsecondDelay);
+}
 
 // Clear the display of all content
 void clear_display(){
@@ -28,17 +62,6 @@ void move_cursor_to_new_line(){
     toggle_clock_latch(STANDARD_MICROSECOND_DELAY);
 }
 
-// Toggle the chipset's clock latch and wait a given number of microseconds.
-// As we don't want to affect any other control bits before an instruction is sent, we can just simply
-// toggle the control latch bit on its own.
-// Also, as each instruction takes x amount of time to complete, we can bundle a microsecond delay param
-// as part of triggering a clock pulse
-void toggle_clock_latch(unsigned int microsecondDelay){
-    PORTB |= E;
-    PORTB &= ~E;
-    delayMicroseconds(microsecondDelay);
-}
-
 // Write a single character to the display
 void write_char(char c){
     PORTD = c;
@@ -52,6 +75,7 @@ void write_str(char* str){
     for(int i = 0; i < strlen(str); ++i){
         write_char(str[i]);
     }
+    PORTB = 0;
 }
 
 // Carry out all of the functions required to boot the display into eight bit, one line display mode.
@@ -106,7 +130,7 @@ void setup(){
 
     write_str(TEST_STRING_SINGLE_LINE);
     move_cursor_to_new_line();
-    write_str(TEST_STRING_SINGLE_LINE);
+    write_str(TEST_STRING_DUAL_LINE);
 }
 
 void loop(){
